@@ -13,9 +13,9 @@ from azure.mgmt.resource import ResourceManagementClient
 def main():
 
     SUBSCRIPTION_ID = os.environ.get("SUBSCRIPTION_ID", None)
-    GROUP_NAME = "testgroupx"
-    STORAGE_ACCOUNT = "storageaccountxxy"
-    FILE_SHARE = "filesharexxyyzz"
+    GROUP_NAME = "testgroupxx4"
+    STORAGE_ACCOUNT = "storageaccountxxx444"
+    FILE_SHARE = "filesharexxyyzz4"
 
     # Create client
     # # For other authentication approaches, please see: https://pypi.org/project/azure-identity/
@@ -71,7 +71,9 @@ def main():
         GROUP_NAME,
         STORAGE_ACCOUNT,
         FILE_SHARE,
-        {}
+        {
+          # "access_tier": "TransactionOptimized"
+        }
     )
     print("Create file share:\n{}".format(file_share))
 
@@ -89,14 +91,18 @@ def main():
         STORAGE_ACCOUNT,
         FILE_SHARE,
         {
-          "properties": {
-            "metadata": {
-              "type": "image"
-            }
-          }
+          "access_tier": "Hot"
         }
     )
     print("Update file share:\n{}".format(file_share))
+
+    # Get file share
+    file_share = storage_client.file_shares.get(
+        GROUP_NAME,
+        STORAGE_ACCOUNT,
+        FILE_SHARE
+    )
+    print("Get file share:\n{}".format(file_share))
     
     # Delete file share
     file_share = storage_client.file_shares.delete(
