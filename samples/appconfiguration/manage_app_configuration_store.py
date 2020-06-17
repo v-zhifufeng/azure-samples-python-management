@@ -5,7 +5,7 @@
 # --------------------------------------------------------------------------
 import os
 
-from azure.identity import DefaultAzureCredential
+from azure.identity import DefaultAzureCredential, InteractiveBrowserCredential, KnownAuthorities
 from azure.mgmt.appconfiguration import AppConfigurationManagementClient
 from azure.mgmt.resource import ResourceManagementClient
 
@@ -18,12 +18,18 @@ def main():
 
     # Create client
     # For other authentication approaches, please see: https://pypi.org/project/azure-identity/
+    credential = InteractiveBrowserCredential(
+      authority=KnownAuthorities.AZURE_PUBLIC_CLOUD,
+      tenant_id=os.environ.get("AZURE_TENANT_ID"),
+      client_id=os.environ.get("AZURE_CLIENT_ID"),
+    )
+
     appconfig_client = AppConfigurationManagementClient(
-        credential=DefaultAzureCredential(),
+        credential=credential,
         subscription_id=SUBSCRIPTION_ID
     )
     resource_client = ResourceManagementClient(
-        credential=DefaultAzureCredential(),
+        credential=credential,
         subscription_id=SUBSCRIPTION_ID
     )
 
